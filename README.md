@@ -1,2 +1,2 @@
-# descufizator
-API for descufize
+# fitapp
+API for fitapp
