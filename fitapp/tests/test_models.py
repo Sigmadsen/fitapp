@@ -1,9 +1,9 @@
-from django.test import TestCase
+from django.test import TransactionTestCase
 from django.contrib.auth.models import User
 from fitapp.models import Ingredient
 
 
-class IngredientModelTest(TestCase):
+class IngredientModelTest(TransactionTestCase):
 
     def setUp(self):
         self.user = User.objects.create_user(username="testuser", password="12345")
