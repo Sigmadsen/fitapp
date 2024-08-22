@@ -1,6 +1,58 @@
 version: '3.9'
 
 services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+      - celery_worker
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+    env_file:
+      - .env
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  flower:
+    build: .
+    image: mher/flower
+    ports:
+      - '5555:5555'
+    command: celery -A .celery_app flower --broker=redis://redis:6379/0
+    depends_on:
+      - redis
+      - celery_worker
+
+  celery_worker:
+    build: .
+    command: celery -A .celery_app worker --loglevel=debug
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+
+  task_initializer:
+    build: .
+    command: python /app/init_tasks.py
+    depends_on:
+      - celery_worker
+      - redis
+
   db:
     image: postgres:13
     environment:
@@ -14,25 +66,6 @@ services:
     env_file:
       - .env
 
-  web:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/app
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-    environment:
-      - SECRET_KEY=${SECRET_KEY}
-      - DEBUG=${DEBUG}
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-    env_file:
-      - .env
 
 volumes:
   postgres_data:
