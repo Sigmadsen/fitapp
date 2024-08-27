@@ -6,3 +6,4 @@ psycopg2-binary==2.9.9
 celery==5.4.0
 flower==2.0.1
 redis==5.0.7
+django-celery-beat==2.7.0
