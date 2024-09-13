@@ -66,9 +66,13 @@ class ProfileModelTest(TransactionTestCase):
             username="username2", password="password2"
         )
         profile = Profile.objects.create(user=second_user, birth_date="1990-05-15")
+
+        # Use this method to get DateField `birth_date` as datetime.date format
+        profile.refresh_from_db()
+
         self.assertEqual(Profile.objects.count(), 2)
         self.assertEqual(profile.user, second_user)
-        self.assertEqual(profile.birth_date, "1990-05-15")
+        self.assertEqual(profile.birth_date, datetime.date(1990, 5, 15))
 
     def test_read_profile(self):
         profile = Profile.objects.get(user=self.user)
