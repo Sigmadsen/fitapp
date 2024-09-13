@@ -1,9 +1,9 @@
-version: '3.9'
-
 services:
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: >
+      bash -c "python manage.py migrate
+      && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
@@ -12,6 +12,7 @@ services:
       - db
       - redis
       - celery_worker
+      - celery_beat
     environment:
       - SECRET_KEY=${SECRET_KEY}
       - DEBUG=${DEBUG}
@@ -46,12 +47,17 @@ services:
     depends_on:
       - redis
 
-  task_initializer:
+  celery_beat:
     build: .
-    command: python /app/init_tasks.py
+    command: celery -A .celery_app beat --loglevel=info
+    volumes:
+      - .:/app
     depends_on:
-      - celery_worker
       - redis
+      - celery_worker
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379
+      - CELERY_RESULT_BACKEND=redis://redis:6379
 
   db:
     image: postgres:13
