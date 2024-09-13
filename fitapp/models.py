@@ -42,6 +42,5 @@ class TrainingTask(models.Model):
                 )
 
     def save(self, *args, **kwargs):
-        # Перед сохранением вызываем clean для валидации
         self.clean()
         super().save(*args, **kwargs)
