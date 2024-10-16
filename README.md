@@ -23,6 +23,6 @@ Just one more simple web app for fitness
 5. Build and up docker container with docker-compose
    
 ### DJANGO MODELS
-- Ingredient
-- Profile (save a user's `birth_date`)
+- Ingredient(title, calories)
+- User (custom model for saving a user's `birth_date`)
 - TrainingTask

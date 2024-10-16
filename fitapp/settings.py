@@ -30,7 +30,8 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+# Only for local development
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -146,3 +147,5 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": crontab(minute="0", hour="0"),
     },
 }
+
+AUTH_USER_MODEL = "fitapp.User"
