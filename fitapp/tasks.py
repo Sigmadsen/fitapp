@@ -6,7 +6,7 @@ logger = get_task_logger(__name__)
 
 @shared_task
 def my_daily_training():
-    from django.contrib.auth.models import User
+    from fitapp.models import User
 
     users = User.objects.all()
     for user in users:

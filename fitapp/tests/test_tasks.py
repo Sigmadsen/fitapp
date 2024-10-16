@@ -1,6 +1,5 @@
 from django.test import TransactionTestCase
-from django.contrib.auth.models import User
-from fitapp.models import TrainingTask
+from fitapp.models import TrainingTask, User
 from fitapp.tasks import my_daily_training, my_daily_training_for_user
 from unittest.mock import patch
 

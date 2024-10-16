@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from fitapp.models import User
 from django.urls import reverse
 from django.test import TransactionTestCase
 from rest_framework import status

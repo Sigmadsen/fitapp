@@ -1,10 +1,6 @@
-import datetime
-
 from django.core.exceptions import ValidationError
-from django.db import IntegrityError
 from django.test import TransactionTestCase
-from django.contrib.auth.models import User
-from fitapp.models import Ingredient, TrainingTask, Profile
+from fitapp.models import Ingredient, TrainingTask, User
 
 
 class IngredientModelTest(TransactionTestCase):
@@ -54,47 +50,6 @@ class IngredientModelTest(TransactionTestCase):
 
     def test_ingredient_auto_now_add(self):
         self.assertIsNotNone(self.ingredient.created_at)
-
-
-class ProfileModelTest(TransactionTestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(username="username", password="password")
-        self.profile = Profile.objects.create(user=self.user, birth_date="2000-01-01")
-
-    def test_create_profile(self):
-        second_user = User.objects.create_user(
-            username="username2", password="password2"
-        )
-        profile = Profile.objects.create(user=second_user, birth_date="1990-05-15")
-
-        # Use this method to get DateField `birth_date` as datetime.date format
-        profile.refresh_from_db()
-
-        self.assertEqual(Profile.objects.count(), 2)
-        self.assertEqual(profile.user, second_user)
-        self.assertEqual(profile.birth_date, datetime.date(1990, 5, 15))
-
-    def test_read_profile(self):
-        profile = Profile.objects.get(user=self.user)
-        self.assertEqual(profile.birth_date, datetime.date(2000, 1, 1))
-
-    def test_update_profile(self):
-        profile = Profile.objects.get(user=self.user)
-        profile.birth_date = "1995-12-31"
-        profile.save()
-
-        updated_profile = Profile.objects.get(user=self.user)
-        self.assertEqual(updated_profile.birth_date, datetime.date(1995, 12, 31))
-
-    def test_delete_profile(self):
-        profile = Profile.objects.get(user=self.user)
-        profile.delete()
-
-        self.assertEqual(Profile.objects.count(), 0)
-
-    def test_cannot_create_multiple_profiles_for_one_user(self):
-        with self.assertRaises(IntegrityError):
-            Profile.objects.create(user=self.user, birth_date="2000-01-01")
 
 
 class TrainingTaskModelTest(TransactionTestCase):

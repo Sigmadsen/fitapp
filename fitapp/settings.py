@@ -147,3 +147,5 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": crontab(minute="0", hour="0"),
     },
 }
+
+AUTH_USER_MODEL = "fitapp.User"
