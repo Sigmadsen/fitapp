@@ -9,3 +9,4 @@ redis==5.0.7
 django-celery-beat==2.7.0
 mypy==1.12.1
 django-stubs[1.12.1]
+celery-stubs[1.12.1]
