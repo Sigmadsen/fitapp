@@ -2,10 +2,14 @@ name: PEP-484 Type hints (mypy)
 
 on:
   pull_request:
-    types: [opened, synchronize, closed]
+    types: [opened, synchronize, reopened]
   push:
     branches:
       - main
+
+permissions:
+  contents: read
+  issues: write
 
 jobs:
   type-check:
@@ -26,5 +30,25 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run mypy
+      id: mypy
+      continue-on-error: true
       run: |
         mypy . --disallow-untyped-defs
+
+    - name: Comment mypy result on pull request
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const result = '${{ steps.mypy.outcome }}' === 'success' ? 'OK' : 'NOT OK';
+
+          await github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+            body: `mypy: ${result}`
+          });
+
+    - name: Fail workflow if mypy failed
+      if: steps.mypy.outcome != 'success'
+      run: exit 1
