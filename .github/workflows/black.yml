@@ -1,4 +1,4 @@
-name: Black
+name: PEP-8 Python code convention (black)
 
 on:
   pull_request:
