@@ -17,10 +17,10 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4.1.7
+      uses: actions/checkout@v6
 
     - name: Set up Python
-      uses: actions/setup-python@v5.1.1
+      uses: actions/setup-python@v6
       with:
         python-version: 3.x
 
@@ -37,7 +37,7 @@ jobs:
 
     - name: Comment mypy result on pull request
       if: github.event_name == 'pull_request'
-      uses: actions/github-script@v7
+      uses: actions/github-script@v8
       with:
         script: |
           const result = '${{ steps.mypy.outcome }}' === 'success' ? 'OK' : 'NOT OK';
